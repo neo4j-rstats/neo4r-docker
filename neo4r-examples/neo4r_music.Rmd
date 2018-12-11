@@ -1,0 +1,92 @@
+---
+title: "neo4r"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Connect to the db 
+
+```{r}
+library(neo4r)
+con <- neo4j_api$new(url = "http://localhost:7474", user = "neo4j", password = "plopplop")
+
+# Should return 200 
+con$ping()
+
+```
+
+## Check the db status 
+
+```{r}
+# Get Neo4J Version
+con$get_version()
+# List constaints (if any)
+con$get_constraints()
+# Get a vector of labels (if any)
+con$get_labels()
+# Get a vector of relationships (if any)
+con$get_relationships()
+# Get schema 
+con$get_schema()
+```
+
+## Upload data
+
+### Dataset of music entries
+
+```{r}
+# Create the constraints
+call_api("CREATE CONSTRAINT ON (a:artist) ASSERT a.name IS UNIQUE;", con)
+call_api("CREATE CONSTRAINT ON (al:album) ASSERT al.name IS UNIQUE;", con)
+# List constaints (if any)
+con$get_constraints()
+```
+
+### Create the query to be run on load, and send the data to the server
+
+```{r}
+# Creating the artists nodes
+on_load_query <- 
+    'MERGE (a:artist { name: csvLine.artist})
+    MERGE (t:album {name: csvLine.album_name})
+    MERGE (p:track {name: csvLine.track})
+    MERGE (a) -[:has_recorded] -> (t)
+    MERGE (t) -[:contains] -> (p)
+    SET p.duration = toInteger(csvLine.duration), p.expl = toBoolean(csvLine.explicit), p.pop = csvLine.popularity' 
+
+# Send the csv 
+load_csv(url = "https://raw.githubusercontent.com/ThinkR-open/datasets/master/tracks.csv", 
+         con = con, header = TRUE, periodic_commit = 500, 
+         as = "csvLine", on_load = on_load_query)
+
+
+```
+
+## Check the db status 
+
+```{r}
+# List constaints (if any)
+con$get_constraints()
+# Get a vector of labels (if any)
+con$get_labels()
+# Get a vector of relationships (if any)
+con$get_relationships()
+# Get schema 
+con$get_schema()
+```
+
+## Run queries
+
+```{r}
+"MATCH (a:artist) WHERE a.name = 'Thy Art Is Murder' RETURN COUNT(*);" %>%
+  call_api(con)
+```
+
+```{r}
+'MATCH (a:artist {name : "Thy Art Is Murder"}) -[:has_recorded]-> (b) RETURN b' %>%
+  call_api(con)
+```
+
