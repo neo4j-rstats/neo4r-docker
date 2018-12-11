@@ -17,3 +17,4 @@ Go to http://localhost:8787/, enter with user=rstudio & your password.
 The user for Neo4J is `neo4j` and password for the one defined in `-e NEOPASS`. If you didn't specified anything, it's `neo4j`. 
 
 In the `neo4r-examples` folder, you'll find a series of Rmd to experiement with `neo4r`.
+

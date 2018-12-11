@@ -85,8 +85,5 @@ con$get_schema()
   call_api(con)
 ```
 
-```{r}
-'MATCH (a:artist {name : "Thy Art Is Murder"}) -[:has_recorded]-> (b) RETURN b' %>%
-  call_api(con)
-```
+
 
