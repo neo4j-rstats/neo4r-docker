@@ -4,7 +4,7 @@ RUN apt-get install -y openjdk-8-jre && mkdir /home/neo4j && cd /home/neo4j && w
 
 RUN apt-get install -y libudunits2-dev
 
-RUN R -e 'install.packages("remotes")' && R -e 'remotes::install_github("neo4j-rstats/neo4r@dev")' && R -e 'install.packages("ggraph")' && R -e 'install.packages("visNetwork")'
+RUN R -e 'install.packages("remotes")' && R -e 'remotes::install_github("neo4j-rstats/neo4r")' && R -e 'install.packages("ggraph")' && R -e 'install.packages("visNetwork")'
 
 RUN mkdir /home/rstudio/neo4r-examples
 
