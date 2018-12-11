@@ -4,7 +4,7 @@
 
 ```
 docker pull ColinFay/neo4r-docker
-docker run -e PASSWORD=plop -e NEOPASS=pouet -d -p 8787:8787 neo4r
+docker run -e PASSWORD=plop -e NEOPASS=pouet -d -p 8787:8787 ColinFay/neo4r-docker
 ```
 
 Change the passwords to whatever you want. :

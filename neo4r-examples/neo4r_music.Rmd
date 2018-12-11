@@ -11,8 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(neo4r)
-con <- neo4j_api$new(url = "http://localhost:7474", user = "neo4j", password = "plopplop")
+con <- neo4j_api$new(url = "http://localhost:7474", user = "neo4j", password = "neo4j")
 
+# If you just launched the container, wait a few seconds before trying to connect 
 # Should return 200 
 con$ping()
 
@@ -70,7 +71,7 @@ load_csv(url = "https://raw.githubusercontent.com/ThinkR-open/datasets/master/tr
 ```{r}
 # List constaints (if any)
 con$get_constraints()
-# Get a vector of labels (if any)
+# Get a vector of labels (if any)git
 con$get_labels()
 # Get a vector of relationships (if any)
 con$get_relationships()
@@ -86,4 +87,24 @@ con$get_schema()
 ```
 
 
+```{r}
+"MATCH (a:artist) -[:has_recorded] -> (b:album {name : 'Dear Desolation'}) -[:contains] -> (t:track) RETURN t AS tracks" %>%
+  call_api(con)
+```
+
+
+## Create a Graph 
+
+```{r}
+"MATCH (a:artist) -[:has_recorded] -> (b:album ) RETURN a, b" %>%
+  call_api(con, type = "graph")
+```
+
+```{r}
+library(ggraph)
+network <- "MATCH (a:artist {name: 'David Bowie'}) -[b:has_recorded] -> (c:album ) RETURN *" %>%
+  call_api(con, type = "graph") %>% 
+  convert_to(format = "visNetwork") 
+visNetwork::visNetwork(network$nodes, network$relationships)
+```
 
