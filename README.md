@@ -3,8 +3,8 @@
 ## How to 
 
 ```
-docker pull ColinFay/neo4r-docker
-docker run -e PASSWORD=plop -e NEOPASS=pouet -d -p 8787:8787 ColinFay/neo4r-docker
+docker pull colinfay/neo4r-docker
+docker run -e PASSWORD=plop -e NEOPASS=pouet -d -p 8787:8787 colinfay/neo4r-docker
 ```
 
 Change the passwords to whatever you want. :
@@ -21,5 +21,5 @@ In the `neo4r-examples` folder, you'll find a series of Rmd to experiement with 
 If you need to perform some configuration, launch the docker as root 
 
 ```
-docker run -e PASSWORD=plop -e NEOPASS=pouet -e ROOT=true -d -p 8787:8787 ColinFay/neo4r-docker
+docker run -e PASSWORD=plop -e NEOPASS=pouet -e ROOT=true -d -p 8787:8787 colinfay/neo4r-docker
 ```
