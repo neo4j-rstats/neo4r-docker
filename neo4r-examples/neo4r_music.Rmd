@@ -1,6 +1,8 @@
 ---
 title: "neo4r"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(neo4r)
-con <- neo4j_api$new(url = "http://localhost:7474", user = "neo4j", password = "neo4j")
+con <- neo4j_api$new(url = "http://localhost:7474", user = "neo4j", password = "pouet")
 
 # If you just launched the container, wait a few seconds before trying to connect 
 # Should return 200 
@@ -96,15 +98,15 @@ con$get_schema()
 ## Create a Graph 
 
 ```{r}
-"MATCH (a:artist) -[:has_recorded] -> (b:album ) RETURN a, b" %>%
+"MATCH (a:artist) -[b:has_recorded] -> (c:album ) RETURN a, b, c" %>%
   call_api(con, type = "graph")
 ```
 
 ```{r}
-library(ggraph)
-network <- "MATCH (a:artist {name: 'David Bowie'}) -[b:has_recorded] -> (c:album ) RETURN *" %>%
+library(visNetwork)
+network <- "MATCH (a:artist {name: 'Kreator'}) -[b:has_recorded] -> (c:album) -[d:contains] -> (e:track) RETURN *" %>%
   call_api(con, type = "graph") %>% 
   convert_to(format = "visNetwork") 
-visNetwork::visNetwork(network$nodes, network$relationships)
+visNetwork(network$nodes, network$relationships)
 ```
 
